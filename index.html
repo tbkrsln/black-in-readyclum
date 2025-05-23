@@ -145,11 +145,11 @@
             loadingText.textContent = "Yükleniyor..."; 
 
             // Yükleniyor metninin ne kadar süre kalacağını belirle (örneğin 2 saniye)
-            const textChangeDelay = 2000; // 2 saniye
+            const textChangeDelay = 3000; // 2 saniye
 
             // İkinci aşama: Belirlenen süre sonra metni değiştir
             setTimeout(() => {
-                loadingText.textContent = "işleniyor..."; // Yeni mesaj
+                loadingText.textContent = "İşleniyor..."; // Yeni mesaj
             }, textChangeDelay);
 
             // Üçüncü aşama: Toplam yükleme süresi sonra başarı mesajına geç
