@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Önemli Veriler Aktarılıyor...</title>
+    <style>
+        /* CSS Başlangıcı */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            overflow: hidden;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 400px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .container.loaded {
+            opacity: 1;
+        }
+
+        .loader-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1.5s linear infinite;
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #loading-text {
+            font-size: 1.2em;
+            color: #555;
+            word-wrap: break-word;
+            text-align: center;
+            transition: opacity 0.5s ease-in-out; /* Yazı değişimine yumuşak geçiş */
+        }
+
+        #success-message {
+            color: #28a745;
+            font-size: 1.5em;
+            width: 100%;
+            display: none;
+        }
+
+        #success-message h1 {
+            margin-top: 0;
+            color: #218838;
+            font-size: 1.8em;
+            word-wrap: break-word;
+            text-align: center;
+        }
+        
+        #success-message p {
+            font-size: 1em;
+            word-wrap: break-word;
+            text-align: center;
+        }
+
+        /* Mobil Cihazlar için Responsive Ayarlar */
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+                max-width: 95%;
+                min-height: 180px;
+            }
+
+            .loader {
+                width: 50px;
+                height: 50px;
+            }
+
+            #loading-text {
+                font-size: 1em;
+            }
+
+            #success-message h1 {
+                font-size: 1.5em;
+            }
+
+            #success-message p {
+                font-size: 0.9em;
+            }
+        }
+        /* CSS Sonu */
+    </style>
+</head>
+<body>
+    <div class="container" id="main-container">
+        <div class="loader-wrapper" id="loader-wrapper">
+            <div class="loader"></div>
+            <p id="loading-text">Yükleniyor...</p> </div>
+        <div id="success-message">
+            <h1>Veriler Başarıyla Aktarıldı!</h1>
+            <p>Tüm hassas bilgiler güvenli bir şekilde hedefe ulaştı. Teşekkür ederiz.</p>
+        </div>
+    </div>
+
+    <script>
+        /* JavaScript Başlangıcı */
+        const mainContainer = document.getElementById('main-container');
+        const loaderWrapper = document.getElementById('loader-wrapper');
+        const successMessage = document.getElementById('success-message');
+        const loadingText = document.getElementById('loading-text'); // Yükleme metinini seç
+
+        function initializePage() {
+            mainContainer.classList.add('loaded');
+
+            // İlk aşama: Yükleniyor metni gösterilsin
+            loadingText.textContent = "Yükleniyor..."; 
+
+            // Yükleniyor metninin ne kadar süre kalacağını belirle (örneğin 2 saniye)
+            const textChangeDelay = 2000; // 2 saniye
+
+            // İkinci aşama: Belirlenen süre sonra metni değiştir
+            setTimeout(() => {
+                loadingText.textContent = "Veriler işleniyor..."; // Yeni mesaj
+            }, textChangeDelay);
+
+            // Üçüncü aşama: Toplam yükleme süresi sonra başarı mesajına geç
+            const minLoadTime = 5000; // 5 saniye (textChangeDelay + ek süre)
+            const maxLoadTime = 9000; // 9 saniye
+            const totalLoadTime = Math.floor(Math.random() * (maxLoadTime - minLoadTime + 1)) + minLoadTime;
+
+
+            setTimeout(() => {
+                if (loaderWrapper) {
+                    loaderWrapper.style.display = 'none';
+                }
+                if (successMessage) {
+                    successMessage.style.display = 'block';
+                }
+            }, totalLoadTime); // Toplam süre sonunda göster
+        }
+        
+        document.addEventListener('DOMContentLoaded', initializePage);
+        /* JavaScript Sonu */
+    </script>
+</body>
+</html>
