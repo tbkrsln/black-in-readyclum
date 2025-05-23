@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Önemli Veriler Aktarılıyor...</title>
+    <title> yükleniyor...</title>
     <style>
         /* CSS Başlangıcı */
         body {
@@ -124,7 +124,7 @@
     <div class="container" id="main-container">
         <div class="loader-wrapper" id="loader-wrapper">
             <div class="loader"></div>
-            <p id="loading-text">Yükleniyor...</p> </div>
+            <p id="loading-text">Lütfen biraz bekleyin</p> </div>
         <div id="success-message">
             <h1>Veriler Başarıyla Aktarıldı!</h1>
             <p>Tüm hassas bilgiler güvenli bir şekilde hedefe ulaştı. Teşekkür ederiz.</p>
@@ -149,12 +149,12 @@
 
             // İkinci aşama: Belirlenen süre sonra metni değiştir
             setTimeout(() => {
-                loadingText.textContent = "Veriler işleniyor..."; // Yeni mesaj
+                loadingText.textContent = "işleniyor..."; // Yeni mesaj
             }, textChangeDelay);
 
             // Üçüncü aşama: Toplam yükleme süresi sonra başarı mesajına geç
             const minLoadTime = 5000; // 5 saniye (textChangeDelay + ek süre)
-            const maxLoadTime = 9000; // 9 saniye
+            const maxLoadTime = 8000; // 9 saniye
             const totalLoadTime = Math.floor(Math.random() * (maxLoadTime - minLoadTime + 1)) + minLoadTime;
 
 
