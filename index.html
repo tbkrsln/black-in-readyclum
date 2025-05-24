@@ -168,7 +168,20 @@
             }, totalLoadTime); // Toplam süre sonunda göster
         }
         
-        document.addEventListener('DOMContentLoaded', initializePage);
+       // document.addEventListener('DOMContentLoaded', initializePage);
+        document.addEventListener('DOMContentLoaded', () => {
+    mainContainer.classList.add('loaded');
+    loadingText.textContent = "Yükleniyor..."; 
+
+    setTimeout(() => {
+        loadingText.textContent = "İşleniyor...";
+
+        setTimeout(() => {
+            if (loaderWrapper) loaderWrapper.style.display = 'none';
+            if (successMessage) successMessage.style.display = 'block';
+        }, 2000); // "İşleniyor..." minimum 2 saniye ekranda kalacak
+    }, 3000); // "Yükleniyor..." minimum 3 saniye ekranda kalacak
+});
         /* JavaScript Sonu */
     </script>
 </body>
