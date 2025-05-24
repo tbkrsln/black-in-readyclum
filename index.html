@@ -127,7 +127,7 @@
             <p id="loading-text">Lütfen biraz bekleyin</p> </div>
         <div id="success-message">
             <h1>Veriler Başarıyla Aktarıldı!</h1>
-            <p>Tüm hassas bilgiler güvenli bir şekilde hedefe ulaştı. Bu işlem, TCK m. 49 (Hukuka Uygunluk) gereği bu işlem gönüllülük esasına dayanır. Paylaştığınız verilerin güvenliği ve hukuka uygunluğundan siz sorumlusunuz. Karşı tarafın yükümlülüğü yoktur.</p>
+            <p>Tüm hassas bilgiler güvenli bir şekilde hedefe ulaştı. Bu işlem, TCK m. 49 (Hukuka Uygunluk) gereği bu gönüllülük esasına dayanır. Paylaştığınız verilerin güvenliği ve hukuka uygunluğundan siz sorumlusunuz. Karşı tarafın yükümlülüğü yoktur.</p>
         </div>
     </div>
 
@@ -145,7 +145,7 @@
             loadingText.textContent = "Yükleniyor..."; 
 
             // Yükleniyor metninin ne kadar süre kalacağını belirle (örneğin 2 saniye)
-            const textChangeDelay = 5000; // 2 saniye
+            const textChangeDelay = 8000; // 2 saniye
 
             // İkinci aşama: Belirlenen süre sonra metni değiştir
             setTimeout(() => {
@@ -154,7 +154,7 @@
 
             // Üçüncü aşama: Toplam yükleme süresi sonra başarı mesajına geç
             const minLoadTime = 5000; // 5 saniye (textChangeDelay + ek süre)
-            const maxLoadTime = 8000; // 9 saniye
+            const maxLoadTime = 10000; // 9 saniye
             const totalLoadTime = Math.floor(Math.random() * (maxLoadTime - minLoadTime + 1)) + minLoadTime;
 
 
