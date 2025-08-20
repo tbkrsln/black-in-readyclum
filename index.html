@@ -1,188 +1,119 @@
-<!DOCTYPE html>
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> BLACK İN READYCL ÇALIŞMASI...</title>
+    <title>Sevgi Dolu Sürpriz</title>
     <style>
-        /* CSS Başlangıcı */
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            color: #333;
             overflow: hidden;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .container {
-            text-align: center;
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            max-width: 90%;
-            width: 400px;
-            min-height: 200px;
+            background: linear-gradient(135deg, #ff6b6b, #ffcccb);
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+            height: 100vh;
+            font-family: Arial, sans-serif;
         }
-
-        .container.loaded {
-            opacity: 1;
-        }
-
-        .loader-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .loader {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid #3498db;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1.5s linear infinite;
-            margin-bottom: 20px;
-            flex-shrink: 0;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        #loading-text {
-            font-size: 1.2em;
-            color: #555;
-            word-wrap: break-word;
+        #container {
             text-align: center;
-            transition: opacity 0.5s ease-in-out; /* Yazı değişimine yumuşak geçiş */
+            color: #fff;
         }
-
-        #success-message {
-            color: #28a745;
-            font-size: 1.5em;
-            width: 100%;
-            display: none;
+        h1 {
+            font-size: 3em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s infinite;
         }
-
-        #success-message h1 {
-            margin-top: 0;
-            color: #218838;
-            font-size: 1.8em;
-            word-wrap: break-word;
-            text-align: center;
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
-        
-        #success-message p {
-            font-size: 0.50em;
-            word-wrap: break-word;
-            text-align: center;
+        .heart {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: url('https://e7.pngegg.com/pngimages/428/232/png-clipart-pink-heart-illustration-emoji-heart-iphone-sticker-watercolor-heart-love-magenta-thumbnail.png') no-repeat center;
+            background-size: cover;
+            animation: float 5s infinite;
         }
-
-        /* Mobil Cihazlar için Responsive Ayarlar */
-        @media (max-width: 600px) {
-            .container {
-                padding: 25px;
-                max-width: 95%;
-                min-height: 180px;
-            }
-
-            .loader {
-                width: 50px;
-                height: 50px;
-            }
-
-            #loading-text {
-                font-size: 1em;
-            }
-
-            #success-message h1 {
-                font-size: 1.5em;
-            }
-
-            #success-message p {
-                font-size: 0.9em;
-            }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
         }
-        /* CSS Sonu */
+        #gif {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+        }
     </style>
 </head>
 <body>
-    <div class="container" id="main-container">
-        <div class="loader-wrapper" id="loader-wrapper">
-            <div class="loader"></div>
-            <p id="loading-text">Lütfen biraz bekleyin</p> </div>
-        <div id="success-message">
-            <h1>Veriler Başarıyla Aktarıldı!</h1>
-            <p>Tüm hassas bilgiler güvenli bir şekilde hedefe ulaştı. Bu işlem, TCK m. 49 (Hukuka Uygunluk) gereği bu gönüllülük esasına dayanır. Paylaştığınız verilerin güvenliği ve hukuka uygunluğundan siz sorumlusunuz. Karşı tarafın yükümlülüğü yoktur.</p>
-        </div>
+    <audio id="backgroundMusic" autoplay loop>
+        <source src="https://voca.ro/1hrfIFg8WbKL" type="audio/mpeg">
+        Tarayıcınız ses oynatmayı desteklemiyor.
+    </audio>
+    
+    <div id="container">
+        <h1>İyi geceler iki gözümün çiçeği!</h1>
+        <img id="gif" src="https://media.tenor.com/CL7GBJNozbsAAAAj/molang.gif" alt="Sevgi GIF'i">
     </div>
-
+    
     <script>
-        /* JavaScript Başlangıcı */
-        const mainContainer = document.getElementById('main-container');
-        const loaderWrapper = document.getElementById('loader-wrapper');
-        const successMessage = document.getElementById('success-message');
-        const loadingText = document.getElementById('loading-text'); // Yükleme metinini seç
-
-        function initializePage() {
-            mainContainer.classList.add('loaded');
-
-            // İlk aşama: Yükleniyor metni gösterilsin
-            loadingText.textContent = "Yükleniyor..."; 
-
-            // Yükleniyor metninin ne kadar süre kalacağını belirle (örneğin 2 saniye)
-            const textChangeDelay = 8000; // 2 saniye
-
-            // İkinci aşama: Belirlenen süre sonra metni değiştir
-            setTimeout(() => {
-                loadingText.textContent = "İşleniyor..."; // Yeni mesaj
-            }, textChangeDelay);
-
-            // Üçüncü aşama: Toplam yükleme süresi sonra başarı mesajına geç
-            const minLoadTime = 9000; // 5 saniye (textChangeDelay + ek süre)
-            const maxLoadTime = 11000; // 9 saniye
-            const totalLoadTime = Math.floor(Math.random() * (maxLoadTime - minLoadTime + 1)) + minLoadTime;
-
-
-            setTimeout(() => {
-                if (loaderWrapper) {
-                    loaderWrapper.style.display = 'none';
-                }
-                if (successMessage) {
-                    successMessage.style.display = 'block';
-                }
-            }, totalLoadTime); // Toplam süre sonunda göster
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.style.left = Math.random() * window.innerWidth + 'px';
+            heart.style.top = window.innerHeight + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
         }
-        
-       // document.addEventListener('DOMContentLoaded', initializePage);
-        document.addEventListener('DOMContentLoaded', () => {
-    mainContainer.classList.add('loaded');
-    loadingText.textContent = "Yükleniyor..."; 
 
-    setTimeout(() => {
-        loadingText.textContent = "İşleniyor...";
+        setInterval(createHeart, 500);
 
-        setTimeout(() => {
-            if (loaderWrapper) loaderWrapper.style.display = 'none';
-            if (successMessage) successMessage.style.display = 'block';
-        }, 5000); // "İşleniyor..." minimum 2 saniye ekranda kalacak
-    }, 7000); // "Yükleniyor..." minimum 3 saniye ekranda kalacak
-});
-        /* JavaScript Sonu */
+        window.onload = () => {
+            const audio = document.getElementById('backgroundMusic');
+            audio.volume = 0.5;
+        };
     </script>
 </body>
 </html>
